@@ -6,3 +6,9 @@ Contains basic CSS styling.
 App uses Fastapi to communicate with backend.
 Database was created in sqlite3.
 
+# setup
+1. cd to vue directory
+2. Install dependencies
+- npm install
+3. Run app
+- npm run dev
