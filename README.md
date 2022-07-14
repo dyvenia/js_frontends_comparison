@@ -1,6 +1,7 @@
 # REACT-VUE-SVELTE comparison
 
 This project aims to compare 3 javascript frameworks in which a simple Todo App was coded.
+Below you can find graph which is representing authentication & authorization flow. 
 
 ```mermaid
 sequenceDiagram
