@@ -1,51 +1,31 @@
-import AddTodo from "./components/AddTodo";
-import Todos from "./components/Todos";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import TodoList from "./components/TodoList";
+import Login from './components/Login'
+import Cookies from 'js-cookie'
 
 function App() {
-  const [todos, setTodos] = useState([])
+  const [loggedIn, setLoggedIn] = useState(false)
+  const token = Cookies.get('token')
+  let navigate = useNavigate()
 
   useEffect(() => {
-    const getTodos = async () => {
-      const todosFromServer = await fetchTodos()
-      setTodos(todosFromServer)
+
+    if (!token) {
+      navigate('/')
+      return
     }
-    getTodos()
+
+    setLoggedIn(true)
   }, [])
 
-  const fetchTodos = async () => {
-    const response = await fetch('http://localhost:8001')
-    const data = await response.json()
-    return data
-  }
 
-
-  const addTodo = async (todo) => {
-    const response = await fetch('http://localhost:8001', {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(todo)
-    })
-    const data = await response.json()
-
-    setTodos([...todos, data])
-
-  }
-
-  const removeTodo = async (id) => {
-    await fetch(`http://localhost:8001/${id}`, {
-      method: "DELETE",
-    })
-    setTodos(todos.filter((todo) => todo.id !== id))
-  }
 
   return (
-    <div className="container">
-      <AddTodo onAdd={addTodo} />
-      <Todos todos={todos} onRemove={removeTodo} />
-    </div>
+    <Routes>
+      <Route path='/' exact element={<Login />} />
+      <Route path='/todos' element={<TodoList loggedIn={loggedIn} setLoggedIn={setLoggedIn} navigate={navigate} token={token} />} />
+    </Routes>
   );
 }
 

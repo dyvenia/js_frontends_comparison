@@ -1,12 +1,18 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Depends, HTTPException
+
 from models import Todo
 from database import engine
 from sqlmodel import Session, select, SQLModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+
+from authentication import router as auth_router, verify_token
+from starlette.middleware.sessions import SessionMiddleware
+
 
 app = FastAPI()
+
+SESSION_SECRET_KEY = "a4482d047d30e5eafc3e482d613c32e0373f5902"
 
 
 def create_db():
@@ -34,7 +40,7 @@ def on_startup():
 
 
 @app.get("/", response_model=List[Todo], status_code=status.HTTP_200_OK)
-async def get_todo():
+async def get_todo(token, current_user=Depends(verify_token)):
     statement = select(Todo)
     results = session.exec(statement).all()
     return results
@@ -48,7 +54,7 @@ async def post_todo(todo: Todo):
     return new_todo
 
 
-@app.delete("/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/{todo_id}")
 async def delete_todo(todo_id: int):
     session = Session(bind=engine)
     statement = select(Todo).where(Todo.id == todo_id)
@@ -58,5 +64,6 @@ async def delete_todo(todo_id: int):
     return True
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+app.include_router(auth_router)
+
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)

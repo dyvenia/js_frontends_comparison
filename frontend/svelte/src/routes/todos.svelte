@@ -1,43 +1,48 @@
 <script>
-	let newItem = "";
+	import Cookies from 'js-cookie';
+	const token = Cookies.get('token');
 
+	let newItem = '';
+	/**
+	 * @type any[]
+	 */
 	let todoList = [];
 
-	let todo;
-	import { onMount } from "svelte";
+	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		const response = await fetch("http://localhost:8001", {
-			method: "GET",
-			headers: { "Content-type": "application/json" },
+		const response = await fetch('http://localhost:8001/?token=' + token, {
+			method: 'GET',
+			headers: { 'Content-type': 'application/json' }
 		});
 		const data = await response.json();
-		console.log(data);
 		todoList = data;
 	});
 
 	async function addToList() {
-		const response = await fetch("http://localhost:8001", {
-			method: "POST",
+		const response = await fetch('http://localhost:8001', {
+			method: 'POST',
 			headers: {
-				"Content-type": "application/json",
+				'Content-type': 'application/json'
 			},
-			body: JSON.stringify({ text: newItem }),
+			body: JSON.stringify({ text: newItem })
 		});
 		const insertedItem = await response.json();
 
-		console.log(insertedItem);
 		todoList = [...todoList, insertedItem];
-		newItem = "";
+		newItem = '';
 	}
 
+	/**
+	 * @param {number} index
+	 */
 	function removeFromList(index) {
 		let id = todoList[index].id;
 		todoList.splice(index, 1);
 		todoList = todoList;
-		let url = "http://localhost:8001/" + id;
+		let url = 'http://localhost:8001/' + id;
 		const response = fetch(url, {
-			method: "DELETE",
+			method: 'DELETE'
 		});
 	}
 </script>
