@@ -13,7 +13,7 @@ Link to the repo: https://github.com/facebook/react
 + component-based: reusable code
 + large community
 
-### Coms
+### Cons
 - jsx required
 - big package size
 
@@ -27,7 +27,7 @@ Link to the repo: https://github.com/vuejs/vue
  + component-based: reusable code
  + fast
 
-### Coms
+### Cons
 - smaller community then in React
 
 # Svelte
