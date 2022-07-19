@@ -61,7 +61,7 @@ Below you can find a table which as a summary compares 9 important features of e
 
 # Authentication & authorization
 
-Authentication and authorization were added to React and Svelte app. Both are sharing common backend authentication.py file.
+Authentication and authorization were added to React and Svelte app. Both are sharing common backend *authentication.py* file. To see more details about the process go to README.md in frontend/react or frontend/svelte folder.
 
 ```mermaid
 sequenceDiagram
